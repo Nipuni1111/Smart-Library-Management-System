@@ -1,10 +1,6 @@
 # Smart Library Management System
 
-Minimal MERN MVC folder structure only.
 
-## Structure
-
-```
 Smart-Library-Management-System/
 |-- backend/
 |   |-- src/
@@ -29,10 +25,4 @@ Smart-Library-Management-System/
 |   `-- package.json
 |-- .gitignore
 `-- README.md
-```
-
-## MongoDB URL
-
-Do not commit your real MongoDB connection string to GitHub.
-Use `backend/.env` locally and keep it ignored by Git.
 
