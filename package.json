@@ -1,0 +1,13 @@
+{
+  "name": "smart-library-management-system",
+  "version": "1.0.0",
+  "description": "Minimal MERN MVC structure",
+  "scripts": {},
+  "keywords": [
+    "mern",
+    "library-management"
+  ],
+  "author": "",
+  "license": "ISC",
+  "private": true
+}

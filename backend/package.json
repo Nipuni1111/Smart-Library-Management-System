@@ -1,0 +1,17 @@
+{
+  "name": "smart-library-backend",
+  "version": "1.0.0",
+  "description": "Minimal backend MVC structure",
+  "main": "src/app.js",
+  "scripts": {},
+  "keywords": [
+    "mvc",
+    "backend"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "mongoose": "^9.3.1"
+  }
+}
