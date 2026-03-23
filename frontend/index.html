@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>eLibrary.SLIIT — The Knowledge University</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #112240;
+    --navy-light: #1a3a6b;
+    --gold: #f5a623;
+    --gold-light: #ffd07a;
+    --gold-pale: #fff8ee;
+    --white: #ffffff;
+    --gray-100: #f4f6fa;
+    --gray-300: #c8d0df;
+    --gray-500: #7a8ba6;
+    --accent-teal: #00c6b8;
+    --accent-blue: #3b82f6;
+    --danger: #ef4444;
+    --success: #10b981;
+    --radius: 14px;
+    --shadow: 0 8px 32px rgba(10,22,40,0.18);
+    --shadow-lg: 0 20px 60px rgba(10,22,40,0.28);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+
+  .topbar {
+    background: var(--gold); padding: 8px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 13px; font-weight: 500; color: var(--navy);
+  }
+  .topbar-left { display: flex; gap: 16px; align-items: center; }
+  .topbar-right { display: flex; gap: 20px; align-items: center; }
+  .topbar a { color: var(--navy); text-decoration: none; font-weight: 600; transition: opacity .2s; }
+  .topbar a:hover { opacity: .7; }
+  .social-icons { display: flex; gap: 8px; }
+  .social-icons a {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--navy); color: var(--gold);
+    display: grid; place-items: center; font-size: 11px;
+    text-decoration: none; transition: transform .2s;
+  }
+  .social-icons a:hover { transform: scale(1.15); }
+
+  nav {
+    background: var(--navy-mid); padding: 0 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid rgba(245,166,35,0.15);
+    backdrop-filter: blur(12px); height: 70px;
+  }
+  .logo-wrap { display: flex; align-items: center; gap: 14px; }
+  .logo-box {
+    background: var(--white); border-radius: 8px; padding: 6px 12px;
+    font-family: 'Playfair Display', serif; font-weight: 900;
+    font-size: 15px; color: var(--navy); line-height: 1.2;
+  }
+  .logo-box span { color: var(--gold); }
+  .nav-links { display: flex; gap: 2px; align-items: center; }
+  .nav-links a {
+    color: var(--gray-300); text-decoration: none; font-size: 13.5px; font-weight: 500;
+    padding: 8px 13px; border-radius: 8px; transition: background .2s, color .2s;
+  }
+  .nav-links a:hover, .nav-links a.active { background: rgba(245,166,35,0.12); color: var(--gold); }
+  .dropdown { position: relative; }
+  .dropdown-menu {
+    display: none; position: absolute; top: 100%; left: 0;
+    background: var(--navy-mid); border: 1px solid rgba(245,166,35,0.2);
+    border-radius: var(--radius); min-width: 180px; padding: 8px; box-shadow: var(--shadow-lg);
+  }
+  .dropdown:hover .dropdown-menu { display: block; }
+  .dropdown-menu a { display: block; padding: 9px 14px; border-radius: 8px; font-size: 13px; color: var(--gray-300); }
+  .dropdown-menu a:hover { background: rgba(245,166,35,0.1); color: var(--gold); }
+  .nav-cta {
+    background: var(--gold) !important; color: var(--navy) !important;
+    padding: 9px 18px !important; border-radius: 8px !important;
+    font-weight: 700 !important; font-size: 13px !important;
+  }
+  .nav-cta:hover { background: var(--gold-light) !important; }
+  .nav-search-btn {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(245,166,35,0.12); border: none; color: var(--gold);
+    cursor: pointer; display: grid; place-items: center; font-size: 16px;
+    transition: background .2s;
+  }
+  .nav-search-btn:hover { background: rgba(245,166,35,0.25); }
+
+  .hero {
+    position: relative; min-height: 88vh;
+    display: flex; align-items: center; overflow: hidden; padding: 0 48px;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #060e1c 0%, #0f2547 45%, #1a3a6b 100%);
+  }
+  .hero-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f5a623' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-glow {
+    position: absolute; right: -80px; top: 50%; transform: translateY(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(245,166,35,0.1) 0%, transparent 65%);
+    z-index: 1; pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 600px; animation: fadeUp .9s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(245,166,35,0.14); border: 1px solid rgba(245,166,35,0.35);
+    color: var(--gold); padding: 6px 16px; border-radius: 100px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 22px; animation: fadeUp .9s .1s ease both;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 4.5vw, 4rem); font-weight: 900;
+    line-height: 1.1; color: var(--white); margin-bottom: 18px;
+    animation: fadeUp .9s .2s ease both;
+  }
+  .hero h1 em { color: var(--gold); font-style: italic; }
+  .hero p {
+    font-size: 16px; line-height: 1.75; color: var(--gray-300);
+    margin-bottom: 32px; animation: fadeUp .9s .3s ease both;
+  }
+  .search-bar {
+    display: flex; background: var(--white); border-radius: 12px;
+    overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    margin-bottom: 22px; animation: fadeUp .9s .4s ease both;
+  }
+  .search-bar select {
+    border: none; outline: none; background: var(--gray-100); color: var(--navy);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 0 14px; border-right: 1px solid #dde3ee; cursor: pointer;
+  }
+  .search-bar input {
+    flex: 1; border: none; outline: none; padding: 15px 18px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--navy);
+  }
+  .search-bar button {
+    background: var(--gold); border: none; cursor: pointer; padding: 0 26px;
+    font-size: 14px; color: var(--navy); font-weight: 700;
+    font-family: 'DM Sans', sans-serif; transition: background .2s;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .search-bar button:hover { background: var(--gold-light); }
+  .search-tags { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; animation: fadeUp .9s .5s ease both; }
+  .search-tags > span { font-size: 12px; color: var(--gray-500); }
+  .tag {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+    color: var(--gray-300); padding: 4px 12px; border-radius: 100px;
+    font-size: 12px; cursor: pointer; transition: all .2s;
+  }
+  .tag:hover { background: rgba(245,166,35,0.14); color: var(--gold); border-color: rgba(245,166,35,0.4); }
+  .hero-stats {
+    position: absolute; bottom: 40px; left: 48px; right: 48px;
+    display: flex; gap: 36px; z-index: 2; animation: fadeUp .9s .6s ease both;
+  }
+  .hero-stat { display: flex; flex-direction: column; gap: 3px; }
+  .hero-stat strong { font-size: 26px; font-weight: 700; color: var(--gold); font-family: 'Playfair Display', serif; }
+  .hero-stat span { font-size: 11px; color: var(--gray-500); letter-spacing: .6px; text-transform: uppercase; }
+  .hero-visual {
+    position: absolute; right: 52px; top: 50%; transform: translateY(-50%);
+    z-index: 2; animation: fadeUp .9s .35s ease both;
+  }
+  .book-stack { display: flex; flex-direction: column; gap: 10px; }
+  .book-card-mini {
+    width: 210px; background: rgba(17,34,64,0.9);
+    border: 1px solid rgba(245,166,35,0.2); border-radius: 12px; padding: 14px;
+    transition: transform .3s, border-color .3s; cursor: pointer;
+    backdrop-filter: blur(8px);
+  }
+  .book-card-mini:hover { transform: translateX(-8px); border-color: var(--gold); }
+  .bk-cat { font-size: 10px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
+  .bk-title { font-size: 13px; font-weight: 600; color: var(--white); line-height: 1.3; margin-bottom: 4px; }
+  .bk-author { font-size: 11px; color: var(--gray-500); }
+  .bk-status {
+    display: inline-block; margin-top: 8px;
+    font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+  }
+  .status-avail { background: rgba(16,185,129,0.15); color: var(--success); }
+  .status-queue { background: rgba(245,166,35,0.15); color: var(--gold); }
+
+  .quick-actions {
+    background: var(--gold); padding: 18px 48px;
+    display: flex; align-items: center; overflow-x: auto; gap: 0;
+  }
+  .qa-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 28px; border-right: 1px solid rgba(10,22,40,0.15);
+    cursor: pointer; transition: opacity .2s; flex-shrink: 0;
+  }
+  .qa-item:last-child { border-right: none; }
+  .qa-item:hover { opacity: .72; }
+  .qa-icon { font-size: 22px; }
+  .qa-text strong { display: block; font-size: 13px; color: var(--navy); font-weight: 700; }
+  .qa-text span { font-size: 11px; color: rgba(10,22,40,0.55); }
+
+  section { padding: 68px 48px; }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px; font-family: 'DM Mono', monospace;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.7rem, 2.8vw, 2.5rem); font-weight: 800;
+    color: var(--white); margin-bottom: 10px; line-height: 1.2;
+  }
+  .section-sub { font-size: 15px; color: var(--gray-500); max-width: 520px; line-height: 1.7; }
+
+  .featured { background: var(--navy-mid); }
+  .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 36px; }
+  .view-all {
+    color: var(--gold); font-size: 14px; font-weight: 600;
+    text-decoration: none; display: flex; align-items: center; gap: 6px; transition: gap .2s;
+  }
+  .view-all:hover { gap: 10px; }
+  .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 18px; }
+  .book-card {
+    background: var(--navy); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius); overflow: hidden; cursor: pointer;
+    transition: transform .3s, box-shadow .3s, border-color .3s;
+  }
+  .book-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(245,166,35,0.35); }
+  .book-cover {
+    height: 130px; display: flex; align-items: center; justify-content: center;
+    font-size: 38px; position: relative; overflow: hidden;
+  }
+  .book-cover::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(10,22,40,0.75)); }
+  .bc-1{background:linear-gradient(135deg,#1a3a6b,#060e1c);}
+  .bc-2{background:linear-gradient(135deg,#1a4a3a,#0a2819);}
+  .bc-3{background:linear-gradient(135deg,#4a1a1a,#1a0606);}
+  .bc-4{background:linear-gradient(135deg,#3a1a4a,#150a20);}
+  .bc-5{background:linear-gradient(135deg,#1a3a4a,#080e1c);}
+  .bc-6{background:linear-gradient(135deg,#4a3a1a,#1e1406);}
+  .book-info { padding: 13px; }
+  .book-info .cat { font-size: 10px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
+  .book-info h4 { font-size: 13px; font-weight: 600; color: var(--white); line-height: 1.3; margin-bottom: 4px; }
+  .book-info .author { font-size: 11px; color: var(--gray-500); margin-bottom: 10px; }
+  .book-foot { display: flex; justify-content: space-between; align-items: center; }
+  .avail-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 100px; }
+  .avail{background:rgba(16,185,129,0.15);color:var(--success);}
+  .borrowed{background:rgba(245,166,35,0.15);color:var(--gold);}
+  .reserved-b{background:rgba(239,68,68,0.15);color:var(--danger);}
+  .rating { font-size: 11px; color: var(--gray-500); }
+  .rating em { color: var(--gold); font-style: normal; }
+
+  .inventory-section { background: var(--navy); }
+  .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 36px; }
+  .inv-card {
+    background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius); padding: 24px;
+  }
+  .inv-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 18px; color: var(--white); }
+  .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .stat-row:last-of-type { border-bottom: none; }
+  .stat-row .lbl { font-size: 13px; color: var(--gray-500); display: flex; align-items: center; gap: 8px; }
+  .stat-row .val { font-size: 15px; font-weight: 700; color: var(--white); }
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+  .d-green{background:var(--success);}
+  .d-gold{background:var(--gold);}
+  .d-red{background:var(--danger);}
+  .d-blue{background:var(--accent-blue);}
+  .prog-wrap { margin-top: 18px; }
+  .prog-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray-500); margin-bottom: 6px; }
+  .prog-bar { height: 7px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; }
+  .prog-fill { height: 100%; border-radius: 100px; }
+  .pf-gold{background:var(--gold);}
+  .pf-teal{background:var(--accent-teal);}
+  .alert-list { display: flex; flex-direction: column; gap: 10px; }
+  .alert-item {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15);
+    border-radius: 10px; padding: 12px;
+  }
+  .ai-icon { font-size: 18px; }
+  .ai-text strong { display: block; font-size: 13px; color: var(--white); }
+  .ai-text span { font-size: 11px; color: var(--gray-500); }
+  .ai-badge {
+    margin-left: auto; flex-shrink: 0; font-size: 10px; font-weight: 700;
+    padding: 3px 10px; border-radius: 100px;
+    background: rgba(239,68,68,0.15); color: var(--danger);
+  }
+
+  .categories { background: var(--navy-mid); }
+  .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 14px; margin-top: 36px; }
+  .cat-tile {
+    background: var(--navy); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius); padding: 22px 14px; text-align: center;
+    cursor: pointer; transition: transform .3s, border-color .3s;
+  }
+  .cat-tile:hover { transform: translateY(-5px); border-color: rgba(245,166,35,0.4); }
+  .ct-icon { font-size: 30px; margin-bottom: 10px; }
+  .ct-name { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+  .ct-count { font-size: 11px; color: var(--gray-500); }
+
+  .study-section {
+    background: linear-gradient(135deg, #0e2040 0%, var(--navy-mid) 100%);
+    position: relative; overflow: hidden;
+  }
+  .study-section::before {
+    content: ''; position: absolute; top: -60%; right: -5%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(245,166,35,0.09), transparent 65%);
+    pointer-events: none;
+  }
+  .study-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; position: relative; z-index: 1; }
+  .space-list { display: flex; flex-direction: column; gap: 12px; margin-top: 30px; }
+  .space-item {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--navy); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 14px 18px; transition: border-color .2s;
+  }
+  .space-item:hover { border-color: rgba(245,166,35,0.3); }
+  .sp-icon { font-size: 22px; }
+  .sp-info { flex: 1; }
+  .sp-info strong { display: block; font-size: 14px; color: var(--white); margin-bottom: 3px; }
+  .sp-info span { font-size: 11px; color: var(--gray-500); }
+  .sp-badge { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; flex-shrink: 0; }
+  .sb-open{background:rgba(16,185,129,0.15);color:var(--success);}
+  .sb-busy{background:rgba(245,166,35,0.15);color:var(--gold);}
+  .sb-full{background:rgba(239,68,68,0.15);color:var(--danger);}
+  .study-form {
+    background: var(--navy); border: 1px solid rgba(245,166,35,0.2);
+    border-radius: 20px; padding: 30px;
+  }
+  .study-form h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 20px; color: var(--white); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .form-group label { font-size: 11px; font-weight: 700; color: var(--gray-300); letter-spacing: .6px; text-transform: uppercase; }
+  .form-group input, .form-group select {
+    background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.1);
+    color: var(--white); border-radius: 8px; padding: 10px 13px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color .2s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
+  .form-group select option { background: var(--navy-mid); }
+  .btn-primary {
+    width: 100%; background: var(--gold); color: var(--navy); border: none;
+    border-radius: 10px; padding: 14px; font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s, transform .15s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .announcements { background: var(--navy); }
+  .ann-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 22px; margin-top: 36px; }
+  .ann-card {
+    background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: border-color .3s;
+  }
+  .ann-card:hover { border-color: rgba(245,166,35,0.3); }
+  .ann-img {
+    height: 170px; background: linear-gradient(135deg, var(--navy-light), var(--navy-mid));
+    display: flex; align-items: center; justify-content: center; font-size: 56px;
+  }
+  .ann-body { padding: 20px; }
+  .ann-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 8px; }
+  .ann-body h4 { font-size: 17px; font-weight: 700; color: var(--white); margin-bottom: 8px; line-height: 1.4; }
+  .ann-body p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+  .ann-meta { font-size: 11px; color: var(--gray-500); margin-top: 14px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .ann-sidebar { display: flex; flex-direction: column; gap: 10px; }
+  .ann-mini {
+    background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 14px; cursor: pointer;
+    display: flex; gap: 12px; align-items: flex-start; transition: border-color .2s;
+  }
+  .ann-mini:hover { border-color: rgba(245,166,35,0.3); }
+  .ann-mini-icon { font-size: 20px; flex-shrink: 0; }
+  .ann-mini-text strong { display: block; font-size: 13px; color: var(--white); line-height: 1.3; margin-bottom: 4px; }
+  .ann-mini-text span { font-size: 11px; color: var(--gray-500); }
+
+  footer { background: #060d1a; padding: 52px 48px 22px; border-top: 1px solid rgba(245,166,35,0.1); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 44px; margin-bottom: 36px; }
+  .footer-brand p { font-size: 13px; color: var(--gray-500); line-height: 1.7; margin: 14px 0 18px; }
+  .footer-social { display: flex; gap: 10px; }
+  .footer-social a {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--navy-mid);
+    color: var(--gray-300); display: grid; place-items: center;
+    text-decoration: none; font-size: 13px; transition: background .2s, color .2s;
+  }
+  .footer-social a:hover { background: var(--gold); color: var(--navy); }
+  .footer-col h5 { font-size: 12px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 14px; }
+  .footer-col a { display: block; font-size: 13px; color: var(--gray-500); text-decoration: none; padding: 4px 0; transition: color .2s; }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom { padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 12px; color: var(--gray-500); }
+
+  @media (max-width:1100px) {
+    .hero-visual { display: none; }
+    .inv-grid { grid-template-columns: 1fr; }
+    .study-inner { grid-template-columns: 1fr; }
+    .ann-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width:768px) {
+    nav,section,.hero,.topbar,.quick-actions,footer { padding-left: 20px; padding-right: 20px; }
+    .nav-links { display: none; }
+    .hero { min-height: auto; padding-top: 56px; padding-bottom: 110px; }
+    .hero-stats { flex-wrap: wrap; gap: 18px; }
+    .books-grid { grid-template-columns: repeat(2,1fr); }
+    .cat-grid { grid-template-columns: repeat(3,1fr); }
+    .footer-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .topbar { padding: 8px 20px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="social-icons">
+      <a href="#">f</a><a href="#">in</a><a href="#">▶</a><a href="#">✆</a>
+    </div>
+    <span>📞 +94 11 254 5678 &nbsp;|&nbsp; ✉ library@sliit.lk</span>
+  </div>
+  <div class="topbar-right">
+    <a href="#">Login</a>
+    <a href="#">Membership</a>
+    <a href="#">🔔 Notifications</a>
+  </div>
+</div>
+
+<nav>
+  <div class="logo-wrap">
+    <div class="logo-box">SLIIT <span>UNI</span><br><small style="font-size:9px;font-weight:400;color:#999">THE KNOWLEDGE UNIVERSITY</small></div>
+    <div>
+      <div style="font-size:15px;font-weight:700;color:var(--white)">eLibrary</div>
+      <div style="font-size:11px;color:var(--gray-500)">Knowledge Portal</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#" class="active">Home</a>
+    <a href="#">About</a>
+    <div class="dropdown">
+      <a href="#">eBooks & eResources ▾</a>
+      <div class="dropdown-menu">
+        <a href="#">eBooks Collection</a>
+        <a href="#">eJournals</a>
+        <a href="#">Databases</a>
+        <a href="#">Open Access</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">Research Support ▾</a>
+      <div class="dropdown-menu">
+        <a href="#">Research Guides</a>
+        <a href="#">Citation Tools</a>
+        <a href="#">Thesis Support</a>
+      </div>
+    </div>
+    <a href="#">Our Services</a>
+    <a href="#">Events</a>
+    <a href="#">Other Libraries</a>
+    <a href="#">Help</a>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <button class="nav-search-btn">🔍</button>
+    <a href="#" class="nav-links nav-cta">Reserve Study Space</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">✦ SLIIT Knowledge University Library</div>
+    <h1>Welcome to<br><em>eLibrary.SLIIT</em></h1>
+    <p>Access thousands of books, journals, and digital resources. Your gateway to knowledge — search, borrow, and reserve anytime.</p>
+    <div class="search-bar">
+      <select>
+        <option>All</option>
+        <option>Books</option>
+        <option>eBooks</option>
+        <option>Journals</option>
+        <option>Thesis</option>
+      </select>
+      <input type="text" placeholder="Search by title, author, ISBN, keyword..." />
+      <button>🔍 Search</button>
+    </div>
+    <div class="search-tags">
+      <span>Popular:</span>
+      <span class="tag">Clean Code</span>
+      <span class="tag">Data Structures</span>
+      <span class="tag">Machine Learning</span>
+      <span class="tag">Database Systems</span>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="book-stack">
+      <div class="book-card-mini">
+        <div class="bk-cat">Computer Science</div>
+        <div class="bk-title">Clean Code: A Handbook of Agile Software</div>
+        <div class="bk-author">Robert C. Martin</div>
+        <div class="bk-status status-avail">● Available</div>
+      </div>
+      <div class="book-card-mini">
+        <div class="bk-cat">Data Science</div>
+        <div class="bk-title">Python for Data Analysis</div>
+        <div class="bk-author">Wes McKinney</div>
+        <div class="bk-status status-queue">● 3 in Queue</div>
+      </div>
+      <div class="book-card-mini">
+        <div class="bk-cat">Networking</div>
+        <div class="bk-title">Computer Networking: Top-Down Approach</div>
+        <div class="bk-author">Kurose & Ross</div>
+        <div class="bk-status status-avail">● Available</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>12,400+</strong><span>Total Books</span></div>
+    <div class="hero-stat"><strong>3,200+</strong><span>Digital Resources</span></div>
+    <div class="hero-stat"><strong>850+</strong><span>eJournals</span></div>
+    <div class="hero-stat"><strong>6,500+</strong><span>Active Members</span></div>
+  </div>
+</section>
+
+<div class="quick-actions">
+  <div class="qa-item"><div class="qa-icon">📚</div><div class="qa-text"><strong>Borrow a Book</strong><span>Physical & digital loans</span></div></div>
+  <div class="qa-item"><div class="qa-icon">🔖</div><div class="qa-text"><strong>My Reservations</strong><span>Track your queue</span></div></div>
+  <div class="qa-item"><div class="qa-icon">📊</div><div class="qa-text"><strong>Inventory Dashboard</strong><span>Admin management</span></div></div>
+  <div class="qa-item"><div class="qa-icon">💡</div><div class="qa-text"><strong>Recommendations</strong><span>Based on your courses</span></div></div>
+  <div class="qa-item"><div class="qa-icon">🖥️</div><div class="qa-text"><strong>Digital Library</strong><span>PDFs & eBooks</span></div></div>
+  <div class="qa-item"><div class="qa-icon">🏫</div><div class="qa-text"><strong>Study Spaces</strong><span>Reserve a room</span></div></div>
+</div>
+
+<section class="featured">
+  <div class="section-header">
+    <div>
+      <div class="section-label">📚 Collection</div>
+      <div class="section-title">Featured Books</div>
+      <div class="section-sub">Handpicked titles popular with SLIIT students this semester.</div>
+    </div>
+    <a href="#" class="view-all">View All Books →</a>
+  </div>
+  <div class="books-grid">
+    <div class="book-card"><div class="book-cover bc-1">📘</div><div class="book-info"><div class="cat">Computer Science</div><h4>Clean Code</h4><div class="author">Robert C. Martin</div><div class="book-foot"><span class="avail-badge avail">Available</span><span class="rating"><em>★★★★★</em> 4.9</span></div></div></div>
+    <div class="book-card"><div class="book-cover bc-2">🧠</div><div class="book-info"><div class="cat">AI & ML</div><h4>Deep Learning</h4><div class="author">Ian Goodfellow</div><div class="book-foot"><span class="avail-badge borrowed">3 in Queue</span><span class="rating"><em>★★★★★</em> 4.8</span></div></div></div>
+    <div class="book-card"><div class="book-cover bc-3">📊</div><div class="book-info"><div class="cat">Data Science</div><h4>Python for Data Analysis</h4><div class="author">Wes McKinney</div><div class="book-foot"><span class="avail-badge avail">Available</span><span class="rating"><em>★★★★☆</em> 4.6</span></div></div></div>
+    <div class="book-card"><div class="book-cover bc-4">🌐</div><div class="book-info"><div class="cat">Networking</div><h4>Computer Networking</h4><div class="author">Kurose & Ross</div><div class="book-foot"><span class="avail-badge avail">Available</span><span class="rating"><em>★★★★☆</em> 4.5</span></div></div></div>
+    <div class="book-card"><div class="book-cover bc-5">🗄️</div><div class="book-info"><div class="cat">Databases</div><h4>Database System Concepts</h4><div class="author">Silberschatz et al.</div><div class="book-foot"><span class="avail-badge reserved-b">Reserved</span><span class="rating"><em>★★★★☆</em> 4.4</span></div></div></div>
+    <div class="book-card"><div class="book-cover bc-6">🏗️</div><div class="book-info"><div class="cat">Software Eng.</div><h4>Design Patterns</h4><div class="author">Gang of Four</div><div class="book-foot"><span class="avail-badge avail">Available</span><span class="rating"><em>★★★★★</em> 4.9</span></div></div></div>
+  </div>
+</section>
+
+<section class="inventory-section">
+  <div class="section-label">📊 Module 3 — Inventory</div>
+  <div class="section-title">Inventory at a Glance</div>
+  <div class="section-sub">Real-time stock stats, low-stock alerts, and purchase recommendations for library staff and admins.</div>
+  <div class="inv-grid">
+    <div class="inv-card">
+      <h3>📦 Stock Summary</h3>
+      <div class="stat-row"><div class="lbl"><span class="dot d-green"></span>Available Copies</div><div class="val">8,420</div></div>
+      <div class="stat-row"><div class="lbl"><span class="dot d-gold"></span>Currently Borrowed</div><div class="val">3,140</div></div>
+      <div class="stat-row"><div class="lbl"><span class="dot d-blue"></span>Reserved / In Queue</div><div class="val">840</div></div>
+      <div class="stat-row"><div class="lbl"><span class="dot d-red"></span>Low Stock Titles</div><div class="val">67</div></div>
+      <div class="prog-wrap">
+        <div class="prog-label"><span>Availability Rate</span><span>67%</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-gold" style="width:67%"></div></div>
+      </div>
+      <div class="prog-wrap">
+        <div class="prog-label"><span>Digital Resource Access</span><span>82%</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-teal" style="width:82%"></div></div>
+      </div>
+    </div>
+    <div class="inv-card">
+      <h3>⚠️ Low Stock Alerts</h3>
+      <div class="alert-list">
+        <div class="alert-item"><div class="ai-icon">📘</div><div class="ai-text"><strong>Clean Code — R.C. Martin</strong><span>Computer Science · 1 copy left</span></div><div class="ai-badge">Critical</div></div>
+        <div class="alert-item"><div class="ai-icon">🧠</div><div class="ai-text"><strong>Deep Learning — Goodfellow</strong><span>AI & ML · 0 copies · 3 waiting</span></div><div class="ai-badge">Out of Stock</div></div>
+        <div class="alert-item"><div class="ai-icon">🗄️</div><div class="ai-text"><strong>Database System Concepts</strong><span>Databases · 2 copies left</span></div><div class="ai-badge">Low</div></div>
+        <div class="alert-item"><div class="ai-icon">📊</div><div class="ai-text"><strong>Data Structures & Algorithms</strong><span>CS · 1 copy left</span></div><div class="ai-badge">Critical</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="categories">
+  <div class="section-label">🗂️ Browse</div>
+  <div class="section-title">Explore by Category</div>
+  <div class="cat-grid">
+    <div class="cat-tile"><div class="ct-icon">💻</div><div class="ct-name">Computer Science</div><div class="ct-count">1,240 books</div></div>
+    <div class="cat-tile"><div class="ct-icon">🧠</div><div class="ct-name">AI & Machine Learning</div><div class="ct-count">430 books</div></div>
+    <div class="cat-tile"><div class="ct-icon">📊</div><div class="ct-name">Data Science</div><div class="ct-count">380 books</div></div>
+    <div class="cat-tile"><div class="ct-icon">🌐</div><div class="ct-name">Networking</div><div class="ct-count">290 books</div></div>
+    <div class="cat-tile"><div class="ct-icon">🔐</div><div class="ct-name">Cybersecurity</div><div class="ct-count">210 books</div></div>
+    <div class="cat-tile"><div class="ct-icon">📱</div><div class="ct-name">Mobile Dev</div><div class="ct-count">175 books</div></div>
+    <div class="cat-tile"><div class="ct-icon">🏗️</div><div class="ct-name">Software Eng.</div><div class="ct-count">320 books</div></div>
+    <div class="cat-tile"><div class="ct-icon">📐</div><div class="ct-name">Mathematics</div><div class="ct-count">560 books</div></div>
+  </div>
+</section>
+
+<section class="study-section">
+  <div class="study-inner">
+    <div>
+      <div class="section-label">🏫 Study Spaces</div>
+      <div class="section-title">Reserve Your Study Space</div>
+      <div class="section-sub">Book a quiet reading corner, group discussion room, or computer lab — all in a few clicks.</div>
+      <div class="space-list">
+        <div class="space-item"><div class="sp-icon">🤫</div><div class="sp-info"><strong>Silent Reading Zone A</strong><span>Capacity: 20 seats · Level 2</span></div><span class="sp-badge sb-open">Open</span></div>
+        <div class="space-item"><div class="sp-icon">👥</div><div class="sp-info"><strong>Group Discussion Room 1</strong><span>Capacity: 8 seats · Level 3</span></div><span class="sp-badge sb-busy">2 seats left</span></div>
+        <div class="space-item"><div class="sp-icon">💻</div><div class="sp-info"><strong>Computer Lab — Wing B</strong><span>30 PCs · Level 1</span></div><span class="sp-badge sb-full">Full</span></div>
+        <div class="space-item"><div class="sp-icon">📖</div><div class="sp-info"><strong>Individual Study Booths</strong><span>12 booths · Level 2</span></div><span class="sp-badge sb-open">Open</span></div>
+      </div>
+    </div>
+    <div class="study-form">
+      <h3>Book a Space Now</h3>
+      <div class="form-group"><label>Student ID</label><input type="text" placeholder="e.g. IT21234567" /></div>
+      <div class="form-row">
+        <div class="form-group"><label>Date</label><input type="date" /></div>
+        <div class="form-group"><label>Time</label><input type="time" /></div>
+      </div>
+      <div class="form-group"><label>Space Type</label><select><option>Silent Reading Zone</option><option>Group Discussion Room</option><option>Computer Lab</option><option>Individual Study Booth</option></select></div>
+      <div class="form-group"><label>Duration</label><select><option>1 Hour</option><option>2 Hours</option><option>3 Hours</option><option>Half Day</option></select></div>
+      <button class="btn-primary">Reserve Now →</button>
+    </div>
+  </div>
+</section>
+
+<section class="announcements">
+  <div class="section-label">📢 News & Events</div>
+  <div class="section-title">Library Announcements</div>
+  <div class="ann-grid">
+    <div class="ann-card">
+      <div class="ann-img">📅</div>
+      <div class="ann-body">
+        <div class="ann-tag">Featured Event</div>
+        <h4>Annual Book Fair & Research Exhibition 2024</h4>
+        <p>Join us for the biggest library event of the year. Discover new arrivals, meet authors, and showcase your research projects.</p>
+        <div class="ann-meta"><span>📅 Dec 15, 2024</span><span>📍 Main Library Hall</span><span>🕘 9 AM – 5 PM</span></div>
+      </div>
+    </div>
+    <div class="ann-sidebar">
+      <div class="ann-mini"><div class="ann-mini-icon">🆕</div><div class="ann-mini-text"><strong>New Arrivals: 120 CS Books Added</strong><span>Nov 28 · Computer Science</span></div></div>
+      <div class="ann-mini"><div class="ann-mini-icon">⏰</div><div class="ann-mini-text"><strong>Extended Hours During Exam Season</strong><span>Dec 1–20 · Open till 10 PM</span></div></div>
+      <div class="ann-mini"><div class="ann-mini-icon">🔔</div><div class="ann-mini-text"><strong>Fine Waiver Week — No Penalty on Returns</strong><span>Dec 5–12 · All Members</span></div></div>
+      <div class="ann-mini"><div class="ann-mini-icon">📥</div><div class="ann-mini-text"><strong>New eJournal Access: IEEE Xplore Added</strong><span>Nov 30 · Digital Resources</span></div></div>
+      <div class="ann-mini"><div class="ann-mini-icon">🎓</div><div class="ann-mini-text"><strong>Research Workshop — Citing & Referencing</strong><span>Dec 8 · Library Seminar Room</span></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-box" style="display:inline-block;margin-bottom:4px">SLIIT <span style="color:var(--gold)">UNI</span></div>
+      <p>The SLIIT eLibrary provides students, staff, and researchers with access to a vast collection of physical and digital resources to support learning and research excellence.</p>
+      <div class="footer-social">
+        <a href="#">f</a><a href="#">in</a><a href="#">▶</a><a href="#">✉</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Quick Links</h5>
+      <a href="#">Home</a>
+      <a href="#">Book Search</a>
+      <a href="#">My Account</a>
+      <a href="#">Borrowing History</a>
+      <a href="#">Reservations</a>
+    </div>
+    <div class="footer-col">
+      <h5>Resources</h5>
+      <a href="#">eBooks</a>
+      <a href="#">eJournals</a>
+      <a href="#">Thesis & Dissertations</a>
+      <a href="#">Research Databases</a>
+      <a href="#">Open Access</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <a href="#">📍 SLIIT, Malabe, Sri Lanka</a>
+      <a href="#">📞 +94 11 254 5678</a>
+      <a href="#">✉ library@sliit.lk</a>
+      <a href="#">🕘 Mon–Fri: 8 AM – 8 PM</a>
+      <a href="#">🕘 Sat: 9 AM – 5 PM</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 SLIIT eLibrary. All rights reserved.</p>
+    <p>Built with ❤️ for the SLIIT Knowledge Community</p>
+  </div>
+</footer>
+
+</body>
+</html>

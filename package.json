@@ -2,7 +2,9 @@
   "name": "smart-library-management-system",
   "version": "1.0.0",
   "description": "Minimal MERN MVC structure",
-  "scripts": {},
+  "scripts": {
+    "start": "npm run start --prefix frontend"
+  },
   "keywords": [
     "mern",
     "library-management"
