@@ -9,6 +9,7 @@ const rankStyle = (i) => [
   { background: 'linear-gradient(135deg,#cd7f32,#a0522d)', color: '#fff' },
 ][i] || { background: 'var(--border)', color: 'var(--text-secondary)' };
 
+
 const EBooks = () => {
   const { user } = useAuth();
   const [ebooks, setEbooks] = useState([]);
