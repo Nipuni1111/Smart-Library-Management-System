@@ -17,7 +17,6 @@ const BookManagement = () => {
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
 
-  
   const fetchBooks = async () => {
     setLoading(true);
     try {
