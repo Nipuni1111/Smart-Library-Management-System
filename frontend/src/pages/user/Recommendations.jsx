@@ -12,6 +12,7 @@ const Recommendations = () => {
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
 
+  
   useEffect(() => {
     const fetchAll = async () => {
       try {
