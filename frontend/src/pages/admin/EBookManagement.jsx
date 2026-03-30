@@ -26,6 +26,7 @@ const EBookManagement = () => {
     finally { setLoading(false); }
   };
 
+  
   const fetchAnalytics = async () => {
     try { const { data } = await api.get('/ebooks/analytics'); setAnalytics(data); }
     catch { toast.error('Failed to load analytics'); }
