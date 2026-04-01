@@ -19,14 +19,6 @@ build/
 out/
 *.local
 
-# ─── Uploaded / generated files ──────────────────────────────────────────────
-backend/uploads/images/*
-backend/uploads/ebooks/*
-backend/uploads/csv/*
-!backend/uploads/images/.gitkeep
-!backend/uploads/ebooks/.gitkeep
-!backend/uploads/csv/.gitkeep
-
 # ─── Logs ────────────────────────────────────────────────────────────────────
 logs/
 *.log
