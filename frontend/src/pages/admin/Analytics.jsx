@@ -89,20 +89,30 @@ const Analytics = () => {
           ) : (
             <div className="table-wrapper">
               <table>
-                <thead><tr><th>#</th><th>Title</th><th>Author</th><th>Category</th><th>Available / Total</th><th>Priority</th></tr></thead>
+                <thead><tr><th>#</th><th>Title</th><th>Author</th><th>Category</th><th>Waiting</th><th>Borrows</th><th>Available / Total</th><th>Score</th><th>Priority</th></tr></thead>
                 <tbody>
                   {[...data.recommendations]
-                    .sort((a, b) => a.availableCopies - b.availableCopies)
+                    .sort((a, b) => (b.demandScore || 0) - (a.demandScore || 0))
                     .map((b, idx) => (
                     <tr key={b._id}>
                       <td style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>{idx + 1}</td>
-                      <td style={{ fontWeight: 600, color: 'var(--primary)' }}>{b.title}</td>
+                      <td style={{ fontWeight: 600, color: 'var(--primary)' }}>
+                        {b.title}
+                        {Array.isArray(b.reasons) && b.reasons.length > 0 && (
+                          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                            {b.reasons.join(' | ')}
+                          </div>
+                        )}
+                      </td>
                       <td>{b.author}</td>
                       <td><span className="chip">{b.category}</span></td>
+                      <td>{b.waitingCount ?? 0}</td>
+                      <td>{b.borrowCount ?? 0}</td>
                       <td><span style={{ color: b.availableCopies <= 1 ? 'var(--danger)' : 'var(--success)', fontWeight: 600 }}>{b.availableCopies}/{b.totalCopies}</span></td>
+                      <td style={{ fontWeight: 700 }}>{b.demandScore ?? 0}</td>
                       <td>
-                        <span className={`badge ${b.availableCopies === 0 ? 'badge-danger' : b.availableCopies <= 1 ? 'badge-warning' : 'badge-primary'}`}>
-                          {b.availableCopies === 0 ? '🔴 Urgent' : b.availableCopies <= 1 ? '🟡 High' : '🔵 Medium'}
+                        <span className={`badge ${b.priority === 'urgent' ? 'badge-danger' : b.priority === 'high' ? 'badge-warning' : 'badge-primary'}`}>
+                          {b.priority === 'urgent' ? '🔴 Urgent' : b.priority === 'high' ? '🟡 High' : '🔵 Medium'}
                         </span>
                       </td>
                     </tr>

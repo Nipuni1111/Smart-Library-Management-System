@@ -153,18 +153,77 @@ const getAnalytics = async (req, res) => {
     });
     const categoryData = Object.entries(categoryMap).map(([name, count]) => ({ name, count }));
 
-    const waitingBooks = await WaitingList.distinct('book', { status: 'waiting' });
-    const frequentBorrows = await BorrowRequest.aggregate([
-      { $group: { _id: '$book', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 10 },
+    // Purchase recommendations:
+    // 1) books with waiting list demand
+    // 2) books frequently borrowed
+    // 3) books with very low stock
+    const [waitingAgg, borrowAgg] = await Promise.all([
+      WaitingList.aggregate([
+        { $match: { status: { $in: ['waiting', 'notified'] } } },
+        { $group: { _id: '$book', count: { $sum: 1 } } },
+      ]),
+      BorrowRequest.aggregate([
+        { $match: { status: { $in: ['pending', 'approved', 'returned', 'overdue'] } } },
+        { $group: { _id: '$book', count: { $sum: 1 } } },
+      ]),
     ]);
-    const freqIds = frequentBorrows.map(f => f._id);
-    const lowStockBooks = books.filter(b => b.availableCopies <= 1).map(b => b._id);
-    const recommendIds = [...new Set([...waitingBooks.map(String), ...freqIds.map(String), ...lowStockBooks.map(String)])];
-    const recommendations = await Book.find({ _id: { $in: recommendIds }, isActive: true });
+
+    const waitingMap = new Map(waitingAgg.map(i => [String(i._id), i.count]));
+    const borrowMap = new Map(borrowAgg.map(i => [String(i._id), i.count]));
+    const maxBorrowCount = books.reduce((m, b) => {
+      const reqCount = borrowMap.get(String(b._id)) || 0;
+      const effective = Math.max(reqCount, b.borrowedCount || 0);
+      return Math.max(m, effective);
+    }, 0);
+    const frequentBorrowThreshold = Math.max(2, Math.ceil(maxBorrowCount * 0.4));
+
+    const recommendations = books
+      .map((book) => {
+        const bookId = String(book._id);
+        const waitingCount = waitingMap.get(bookId) || 0;
+        const borrowCount = Math.max(borrowMap.get(bookId) || 0, book.borrowedCount || 0);
+        const lowStock = book.availableCopies <= 1;
+        const frequentBorrow = borrowCount >= frequentBorrowThreshold;
+
+        const qualifies = waitingCount > 0 || frequentBorrow || lowStock;
+        if (!qualifies) return null;
+
+        const demandScore =
+          (waitingCount * 50) +
+          (borrowCount * 10) +
+          (book.availableCopies === 0 ? 40 : lowStock ? 25 : 0);
+
+        const reasons = [];
+        if (waitingCount > 0) reasons.push(`Waiting list: ${waitingCount}`);
+        if (frequentBorrow) reasons.push(`Frequently borrowed: ${borrowCount}`);
+        if (lowStock) reasons.push(`Low stock: ${book.availableCopies}/${book.totalCopies}`);
+
+        const priority = demandScore >= 120
+          ? 'urgent'
+          : demandScore >= 70
+            ? 'high'
+            : 'medium';
+
+        return {
+          ...book.toObject(),
+          waitingCount,
+          borrowCount,
+          demandScore,
+          priority,
+          reasons,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => {
+        if (b.demandScore !== a.demandScore) return b.demandScore - a.demandScore;
+        if (b.waitingCount !== a.waitingCount) return b.waitingCount - a.waitingCount;
+        if (b.borrowCount !== a.borrowCount) return b.borrowCount - a.borrowCount;
+        return a.availableCopies - b.availableCopies;
+      })
+      .slice(0, 20);
 
     res.json({
+      purchaseRecommendationVersion: 2,
       totalBooks, totalCopies, availableCopies, borrowedCopies, lowStock,
       categoryData,
       availability: [
